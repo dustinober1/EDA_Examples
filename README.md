@@ -20,7 +20,10 @@ EDA_Examples/
 │   ├── EPA_Air_Quality_Analysis_Findings.md
 │   └── README.md
 └── New_York_Powerball_Winning_Numbers/
-    └── New_York_Powerball_Winning_Numbers.csv
+    ├── New_York_Powerball_Winning_Numbers.csv
+    ├── ny_powerball_comprehensive_eda.ipynb
+    ├── findings.md
+    └── README.md
 ```
 
 ## Current Datasets
@@ -70,15 +73,25 @@ EDA_Examples/
 ### 3. New York Powerball Winning Numbers
 
 **Location**: `New_York_Powerball_Winning_Numbers/`  
-**Dataset**: `New_York_Powerball_Winning_Numbers.csv` (1,838 lottery draws)  
-**Status**: 📋 *Dataset available - Analysis in development*
+**Dataset**: `New_York_Powerball_Winning_Numbers.csv` (1,836 lottery draws)  
+**Notebook**: `ny_powerball_comprehensive_eda.ipynb`  
+**Findings**: `findings.md`
 
-#### Planned Analysis:
-- 🎰 **Statistical Pattern Analysis**: Number frequency and distribution
-- 📈 **Temporal Trends**: Drawing patterns over time
-- 🔢 **Probability Modeling**: Random vs pattern-based number selection
-- 📊 **Visualization**: Hot/cold numbers, multiplier analysis
-- 🎯 **Insights**: Lottery statistics and randomness validation
+#### Analysis Highlights:
+- 🎰 **Statistical Integrity Verification**: Randomness testing and system validation
+- 📊 **Advanced Feature Engineering**: 25+ features from 3 original variables
+- 🔬 **Comprehensive Testing**: Chi-square, normality, autocorrelation analysis
+- 📈 **Temporal Analysis**: 5-year pattern investigation (2020-2025)
+- 🎲 **Frequency Analysis**: Hot/cold numbers and distribution patterns
+- � **Predictability Assessment**: Scientific evaluation of exploitable patterns
+
+#### Key Findings:
+- **✅ System Integrity Confirmed**: All randomness tests passed (p > 0.05)
+- **🎯 No Exploitable Patterns**: Extensive analysis found no predictive patterns
+- **📊 True Randomness**: Each draw statistically independent (|r| < 0.1)
+- **⚖️ Equal Probability**: All combinations have identical odds (1 in 292M)
+- **🔄 Consistent Operation**: 5+ years of verified random operation
+- **📈 Statistical Compliance**: Perfect adherence to expected probability models
 
 ## Getting Started
 
@@ -192,11 +205,11 @@ Each analysis in this repository follows these standards:
 
 Planned additions to this repository:
 
-- **New York Powerball Analysis**: Statistical pattern analysis of lottery drawings (data ready)
 - **Healthcare Analytics**: Patient outcomes and treatment effectiveness  
 - **Financial Markets**: Stock performance and economic indicators
 - **Customer Analytics**: Behavior patterns and segmentation
 - **Sports Analytics**: Performance metrics and team analysis
+- **Climate Data**: Weather patterns and environmental trends
 
 ## Contributing
 
@@ -270,8 +283,15 @@ print(f"EPA Dataset shape: {df_epa.shape}")
 print(f"Average CO concentration: {df_epa['arithmetic_mean'].mean():.3f} ppm")
 print(f"Average AQI: {df_epa['aqi'].mean():.1f}")
 
+# New York Powerball Analysis
+df_powerball = pd.read_csv('New_York_Powerball_Winning_Numbers/New_York_Powerball_Winning_Numbers.csv')
+df_powerball['Draw Date'] = pd.to_datetime(df_powerball['Draw Date'])
+print(f"Powerball Dataset shape: {df_powerball.shape}")
+print(f"Date range: {df_powerball['Draw Date'].min().strftime('%Y-%m-%d')} to {df_powerball['Draw Date'].max().strftime('%Y-%m-%d')}")
+print(f"Analysis period: {(df_powerball['Draw Date'].max() - df_powerball['Draw Date'].min()).days} days")
+
 # Quick visualization comparison
-fig, axes = plt.subplots(1, 2, figsize=(15, 6))
+fig, axes = plt.subplots(1, 3, figsize=(20, 6))
 
 # Education literacy distribution
 axes[0].hist(df_edu['OVERALL_LI'], bins=30, alpha=0.7, color='blue')
@@ -284,6 +304,13 @@ axes[1].hist(df_epa['arithmetic_mean'], bins=30, alpha=0.7, color='green')
 axes[1].set_title('Distribution of CO Concentrations')
 axes[1].set_xlabel('CO Concentration (ppm)')
 axes[1].set_ylabel('Frequency')
+
+# Powerball multiplier distribution
+multiplier_counts = df_powerball['Multiplier'].value_counts().sort_index()
+axes[2].bar(multiplier_counts.index, multiplier_counts.values, alpha=0.7, color='red')
+axes[2].set_title('Distribution of Powerball Multipliers')
+axes[2].set_xlabel('Multiplier Value')
+axes[2].set_ylabel('Frequency')
 
 plt.tight_layout()
 plt.show()
