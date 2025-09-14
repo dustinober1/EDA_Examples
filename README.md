@@ -9,11 +9,18 @@ This repository contains comprehensive Exploratory Data Analysis (EDA) examples 
 ```
 EDA_Examples/
 ├── README.md
+├── .gitignore
 ├── Education_Districts/
 │   ├── education_districtwise.csv
 │   ├── advanced_education_eda.ipynb
 │   └── findings.md
-└── [Future datasets will be added here]
+├── EPA_Air_Quality/
+│   ├── c4_epa_air_quality.csv
+│   ├── advanced_epa_air_quality_eda.ipynb
+│   ├── EPA_Air_Quality_Analysis_Findings.md
+│   └── README.md
+└── New_York_Powerball_Winning_Numbers/
+    └── New_York_Powerball_Winning_Numbers.csv
 ```
 
 ## Current Datasets
@@ -37,6 +44,41 @@ EDA_Examples/
 - **Three distinct district types** identified through clustering
 - **29.9 percentage point gap** between best and worst performing states
 - **Administrative efficiency** matters more than infrastructure quantity
+
+### 2. EPA Air Quality Analysis
+
+**Location**: `EPA_Air_Quality/`  
+**Dataset**: `c4_epa_air_quality.csv` (260 CO measurements across 52 states)  
+**Notebook**: `advanced_epa_air_quality_eda.ipynb`  
+**Findings**: `EPA_Air_Quality_Analysis_Findings.md`
+
+#### Analysis Highlights:
+- 🌬️ **Environmental Health Focus**: Carbon monoxide concentration analysis
+- 📍 **Geographic Coverage**: Comprehensive 52-state monitoring network
+- 🔬 **Statistical Rigor**: Multiple normality tests, correlation analysis
+- 🤖 **Machine Learning**: K-means clustering (95.9% R² AQI prediction)
+- 📊 **Professional Visualizations**: Spatial analysis, temporal patterns
+- 🏥 **Public Health Insights**: AQI categorization and health recommendations
+
+#### Key Findings:
+- **100% Good Air Quality**: All measurements in "Good" AQI category
+- **Geographic Patterns**: Nevada highest CO levels, California most monitored
+- **Strong Correlation**: CO concentration perfectly predicts AQI (r=0.96)
+- **Public Health**: No health concerns identified nationwide
+- **Monitoring Excellence**: 93.3% data completeness across 253 sites
+
+### 3. New York Powerball Winning Numbers
+
+**Location**: `New_York_Powerball_Winning_Numbers/`  
+**Dataset**: `New_York_Powerball_Winning_Numbers.csv` (1,838 lottery draws)  
+**Status**: 📋 *Dataset available - Analysis in development*
+
+#### Planned Analysis:
+- 🎰 **Statistical Pattern Analysis**: Number frequency and distribution
+- 📈 **Temporal Trends**: Drawing patterns over time
+- 🔢 **Probability Modeling**: Random vs pattern-based number selection
+- 📊 **Visualization**: Hot/cold numbers, multiplier analysis
+- 🎯 **Insights**: Lottery statistics and randomness validation
 
 ## Getting Started
 
@@ -150,9 +192,9 @@ Each analysis in this repository follows these standards:
 
 Planned additions to this repository:
 
-- **Healthcare Analytics**: Patient outcomes and treatment effectiveness
+- **New York Powerball Analysis**: Statistical pattern analysis of lottery drawings (data ready)
+- **Healthcare Analytics**: Patient outcomes and treatment effectiveness  
 - **Financial Markets**: Stock performance and economic indicators
-- **Environmental Data**: Climate patterns and pollution analysis
 - **Customer Analytics**: Behavior patterns and segmentation
 - **Sports Analytics**: Performance metrics and team analysis
 
@@ -209,26 +251,41 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Quick Start Example
 
 ```python
-# Quick start with Education Districts analysis
+# Quick start examples for multiple datasets
+
+# Education Districts Analysis
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load the data
-df = pd.read_csv('Education_Districts/education_districtwise.csv')
+# Load education data
+df_edu = pd.read_csv('Education_Districts/education_districtwise.csv')
+print(f"Education Dataset shape: {df_edu.shape}")
+print(f"Average literacy rate: {df_edu['OVERALL_LI'].mean():.1f}%")
 
-# Basic exploration
-print(f"Dataset shape: {df.shape}")
-print(f"Missing values: {df.isnull().sum().sum()}")
-print(f"Average literacy rate: {df['OVERALL_LI'].mean():.1f}%")
+# EPA Air Quality Analysis
+df_epa = pd.read_csv('EPA_Air_Quality/c4_epa_air_quality.csv')
+print(f"EPA Dataset shape: {df_epa.shape}")
+print(f"Average CO concentration: {df_epa['arithmetic_mean'].mean():.3f} ppm")
+print(f"Average AQI: {df_epa['aqi'].mean():.1f}")
 
-# Quick visualization
-plt.figure(figsize=(10, 6))
-df['OVERALL_LI'].hist(bins=30, alpha=0.7)
-plt.title('Distribution of Literacy Rates')
-plt.xlabel('Literacy Rate (%)')
-plt.ylabel('Frequency')
+# Quick visualization comparison
+fig, axes = plt.subplots(1, 2, figsize=(15, 6))
+
+# Education literacy distribution
+axes[0].hist(df_edu['OVERALL_LI'], bins=30, alpha=0.7, color='blue')
+axes[0].set_title('Distribution of Literacy Rates')
+axes[0].set_xlabel('Literacy Rate (%)')
+axes[0].set_ylabel('Frequency')
+
+# EPA CO concentration distribution  
+axes[1].hist(df_epa['arithmetic_mean'], bins=30, alpha=0.7, color='green')
+axes[1].set_title('Distribution of CO Concentrations')
+axes[1].set_xlabel('CO Concentration (ppm)')
+axes[1].set_ylabel('Frequency')
+
+plt.tight_layout()
 plt.show()
 ```
 
