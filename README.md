@@ -23,6 +23,11 @@ EDA_Examples/
 │   ├── advanced_epa_air_quality_eda.ipynb
 │   ├── EPA_Air_Quality_Analysis_Findings.md
 │   └── README.md
+├── Medical_Insurance_Cost_Dataset/
+│   ├── insurance.csv
+│   ├── medical_insurance_comprehensive_eda.ipynb
+│   ├── findings.md
+│   └── README.md
 └── New_York_Powerball_Winning_Numbers/
     ├── New_York_Powerball_Winning_Numbers.csv
     ├── ny_powerball_comprehensive_eda.ipynb
@@ -98,7 +103,30 @@ EDA_Examples/
 - **Public Health**: No health concerns identified nationwide
 - **Monitoring Excellence**: 93.3% data completeness across 253 sites
 
-### 4. New York Powerball Winning Numbers
+### 4. Medical Insurance Cost Analysis 🏥 **NEW**
+
+**Location**: `Medical_Insurance_Cost_Dataset/`  
+**Dataset**: `insurance.csv` (1,338 insurance records)  
+**Notebook**: `medical_insurance_comprehensive_eda.ipynb`  
+**Findings**: `findings.md`
+
+#### Analysis Highlights:
+- 💰 **Healthcare Economics**: Comprehensive insurance cost factor analysis
+- 🚭 **Risk Factor Assessment**: Smoking, BMI, age, and demographic impacts
+- 📊 **Statistical Rigor**: T-tests, ANOVA, correlation analysis with significance testing
+- 🤖 **Predictive Modeling**: Random Forest achieving 87.4% variance explained
+- 🎯 **Business Intelligence**: Premium pricing strategies and cost containment insights
+- 📈 **Feature Engineering**: BMI categories, age groups, interaction effects analysis
+
+#### Key Findings:
+- **🚭 Smoking Impact**: Smokers pay 3.8x more ($32,050 vs $8,434)
+- **📊 Age Factor**: Moderate correlation (r=0.299) with steady cost increases
+- **⚖️ BMI Influence**: Obese individuals pay 49% more than normal weight
+- **🗺️ Regional Variation**: Up to 19% cost difference between US regions
+- **♂️♀️ Gender Effect**: Males pay 11% more (modest but significant)
+- **👨‍👩‍👧‍👦 Family Size**: Minimal impact on insurance costs
+
+### 5. New York Powerball Winning Numbers
 
 **Location**: `New_York_Powerball_Winning_Numbers/`  
 **Dataset**: `New_York_Powerball_Winning_Numbers.csv` (1,836 lottery draws)  
@@ -320,6 +348,13 @@ print(f"EPA Dataset shape: {df_epa.shape}")
 print(f"Average CO concentration: {df_epa['arithmetic_mean'].mean():.3f} ppm")
 print(f"Average AQI: {df_epa['aqi'].mean():.1f}")
 
+# Medical Insurance Cost Analysis 🏥 NEW
+df_insurance = pd.read_csv('Medical_Insurance_Cost_Dataset/insurance.csv')
+print(f"Insurance Dataset shape: {df_insurance.shape}")
+print(f"Average insurance charge: ${df_insurance['charges'].mean():,.2f}")
+smoker_multiplier = df_insurance[df_insurance['smoker']=='yes']['charges'].mean() / df_insurance[df_insurance['smoker']=='no']['charges'].mean()
+print(f"Smoker cost multiplier: {smoker_multiplier:.1f}x")
+
 # New York Powerball Analysis
 df_powerball = pd.read_csv('New_York_Powerball_Winning_Numbers/New_York_Powerball_Winning_Numbers.csv')
 df_powerball['Draw Date'] = pd.to_datetime(df_powerball['Draw Date'])
@@ -328,7 +363,7 @@ print(f"Date range: {df_powerball['Draw Date'].min().strftime('%Y-%m-%d')} to {d
 print(f"Analysis period: {(df_powerball['Draw Date'].max() - df_powerball['Draw Date'].min()).days} days")
 
 # Quick visualization comparison
-fig, axes = plt.subplots(2, 2, figsize=(16, 12))
+fig, axes = plt.subplots(2, 3, figsize=(20, 12))
 
 # Education literacy distribution
 axes[0,0].hist(df_edu['OVERALL_LI'], bins=30, alpha=0.7, color='blue')
@@ -345,10 +380,16 @@ axes[0,1].set_ylabel('Number of EVs')
 axes[0,1].grid(True, alpha=0.3)
 
 # EPA CO concentration distribution  
-axes[1,0].hist(df_epa['arithmetic_mean'], bins=30, alpha=0.7, color='orange')
-axes[1,0].set_title('Distribution of CO Concentrations')
-axes[1,0].set_xlabel('CO Concentration (ppm)')
-axes[1,0].set_ylabel('Frequency')
+axes[0,2].hist(df_epa['arithmetic_mean'], bins=30, alpha=0.7, color='orange')
+axes[0,2].set_title('Distribution of CO Concentrations')
+axes[0,2].set_xlabel('CO Concentration (ppm)')
+axes[0,2].set_ylabel('Frequency')
+
+# Medical Insurance charges by smoking status
+df_insurance.boxplot(column='charges', by='smoker', ax=axes[1,0])
+axes[1,0].set_title('Insurance Charges by Smoking Status')
+axes[1,0].set_xlabel('Smoker Status')
+axes[1,0].set_ylabel('Charges ($)')
 
 # Powerball multiplier distribution
 multiplier_counts = df_powerball['Multiplier'].value_counts().sort_index()
@@ -356,6 +397,12 @@ axes[1,1].bar(multiplier_counts.index, multiplier_counts.values, alpha=0.7, colo
 axes[1,1].set_title('Distribution of Powerball Multipliers')
 axes[1,1].set_xlabel('Multiplier Value')
 axes[1,1].set_ylabel('Frequency')
+
+# Insurance charges distribution
+axes[1,2].hist(df_insurance['charges'], bins=30, alpha=0.7, color='purple')
+axes[1,2].set_title('Distribution of Insurance Charges')
+axes[1,2].set_xlabel('Charges ($)')
+axes[1,2].set_ylabel('Frequency')
 
 plt.tight_layout()
 plt.show()
