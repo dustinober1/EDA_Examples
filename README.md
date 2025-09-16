@@ -14,6 +14,10 @@ EDA_Examples/
 │   ├── education_districtwise.csv
 │   ├── advanced_education_eda.ipynb
 │   └── findings.md
+├── Electric_Vehicle_Population_Data/
+│   ├── Electric_Vehicle_Population_Data.csv (257K+ records)
+│   ├── comprehensive_ev_eda.ipynb 
+│   └── README.md
 ├── EPA_Air_Quality/
 │   ├── c4_epa_air_quality.csv
 │   ├── advanced_epa_air_quality_eda.ipynb
@@ -48,7 +52,31 @@ EDA_Examples/
 - **29.9 percentage point gap** between best and worst performing states
 - **Administrative efficiency** matters more than infrastructure quantity
 
-### 2. EPA Air Quality Analysis
+### 2. Electric Vehicle Population Data Analysis ⚡ **NEW**
+
+**Location**: `Electric_Vehicle_Population_Data/`  
+**Dataset**: `Electric_Vehicle_Population_Data.csv` (257,635 vehicle registrations, ~60MB)  
+**Notebook**: `comprehensive_ev_eda.ipynb`  
+**Findings**: `findings.md`
+
+#### Analysis Highlights:
+- 🚗 **Large-Scale Dataset**: 257K+ EV registrations with geographic coordinates
+- 🗺️ **Geographic Analysis**: State, county, city distribution with coordinate mapping
+- 📅 **Temporal Trends**: Multi-year adoption patterns and growth analysis
+- 🔋 **Vehicle Characteristics**: Electric range, pricing (MSRP), BEV vs PHEV analysis
+- 🏭 **Market Intelligence**: Manufacturer analysis and market share insights
+- ⚡ **Infrastructure**: Electric utility partnerships and CAFV eligibility
+- 📊 **Advanced Visualizations**: 45+ analysis cells with comprehensive charts
+
+#### Key Findings:
+- **🚀 Exponential Growth**: Strong EV adoption acceleration in recent years
+- **📍 Geographic Concentration**: EV adoption concentrated in Pacific Northwest
+- **🔋 Technology Evolution**: Continuous improvement in electric range capabilities
+- **🏆 Market Leaders**: Clear manufacturer dominance with evolving competitive landscape
+- **⚡ Infrastructure Correlation**: Strong relationship between utility support and adoption
+- **💰 Price-Performance**: Optimal pricing strategies driving mass market adoption
+
+### 3. EPA Air Quality Analysis
 
 **Location**: `EPA_Air_Quality/`  
 **Dataset**: `c4_epa_air_quality.csv` (260 CO measurements across 52 states)  
@@ -70,7 +98,7 @@ EDA_Examples/
 - **Public Health**: No health concerns identified nationwide
 - **Monitoring Excellence**: 93.3% data completeness across 253 sites
 
-### 3. New York Powerball Winning Numbers
+### 4. New York Powerball Winning Numbers
 
 **Location**: `New_York_Powerball_Winning_Numbers/`  
 **Dataset**: `New_York_Powerball_Winning_Numbers.csv` (1,836 lottery draws)  
@@ -210,6 +238,8 @@ Planned additions to this repository:
 - **Customer Analytics**: Behavior patterns and segmentation
 - **Sports Analytics**: Performance metrics and team analysis
 - **Climate Data**: Weather patterns and environmental trends
+- **Real Estate**: Property values and market trends
+- **Social Media**: Engagement patterns and sentiment analysis
 
 ## Contributing
 
@@ -277,6 +307,13 @@ df_edu = pd.read_csv('Education_Districts/education_districtwise.csv')
 print(f"Education Dataset shape: {df_edu.shape}")
 print(f"Average literacy rate: {df_edu['OVERALL_LI'].mean():.1f}%")
 
+# Electric Vehicle Population Analysis ⚡ NEW
+df_ev = pd.read_csv('Electric_Vehicle_Population_Data/Electric_Vehicle_Population_Data.csv')
+print(f"EV Dataset shape: {df_ev.shape}")
+print(f"Total EV registrations: {len(df_ev):,}")
+print(f"EV types: {df_ev['Electric Vehicle Type'].unique()}")
+print(f"Date range: {df_ev['Model Year'].min():.0f} - {df_ev['Model Year'].max():.0f}")
+
 # EPA Air Quality Analysis
 df_epa = pd.read_csv('EPA_Air_Quality/c4_epa_air_quality.csv')
 print(f"EPA Dataset shape: {df_epa.shape}")
@@ -291,26 +328,34 @@ print(f"Date range: {df_powerball['Draw Date'].min().strftime('%Y-%m-%d')} to {d
 print(f"Analysis period: {(df_powerball['Draw Date'].max() - df_powerball['Draw Date'].min()).days} days")
 
 # Quick visualization comparison
-fig, axes = plt.subplots(1, 3, figsize=(20, 6))
+fig, axes = plt.subplots(2, 2, figsize=(16, 12))
 
 # Education literacy distribution
-axes[0].hist(df_edu['OVERALL_LI'], bins=30, alpha=0.7, color='blue')
-axes[0].set_title('Distribution of Literacy Rates')
-axes[0].set_xlabel('Literacy Rate (%)')
-axes[0].set_ylabel('Frequency')
+axes[0,0].hist(df_edu['OVERALL_LI'], bins=30, alpha=0.7, color='blue')
+axes[0,0].set_title('Distribution of Literacy Rates')
+axes[0,0].set_xlabel('Literacy Rate (%)')
+axes[0,0].set_ylabel('Frequency')
+
+# EV Model Year trends
+ev_by_year = df_ev['Model Year'].value_counts().sort_index()
+axes[0,1].plot(ev_by_year.index, ev_by_year.values, marker='o', linewidth=2, color='green')
+axes[0,1].set_title('EV Registrations by Model Year')
+axes[0,1].set_xlabel('Model Year')
+axes[0,1].set_ylabel('Number of EVs')
+axes[0,1].grid(True, alpha=0.3)
 
 # EPA CO concentration distribution  
-axes[1].hist(df_epa['arithmetic_mean'], bins=30, alpha=0.7, color='green')
-axes[1].set_title('Distribution of CO Concentrations')
-axes[1].set_xlabel('CO Concentration (ppm)')
-axes[1].set_ylabel('Frequency')
+axes[1,0].hist(df_epa['arithmetic_mean'], bins=30, alpha=0.7, color='orange')
+axes[1,0].set_title('Distribution of CO Concentrations')
+axes[1,0].set_xlabel('CO Concentration (ppm)')
+axes[1,0].set_ylabel('Frequency')
 
 # Powerball multiplier distribution
 multiplier_counts = df_powerball['Multiplier'].value_counts().sort_index()
-axes[2].bar(multiplier_counts.index, multiplier_counts.values, alpha=0.7, color='red')
-axes[2].set_title('Distribution of Powerball Multipliers')
-axes[2].set_xlabel('Multiplier Value')
-axes[2].set_ylabel('Frequency')
+axes[1,1].bar(multiplier_counts.index, multiplier_counts.values, alpha=0.7, color='red')
+axes[1,1].set_title('Distribution of Powerball Multipliers')
+axes[1,1].set_xlabel('Multiplier Value')
+axes[1,1].set_ylabel('Frequency')
 
 plt.tight_layout()
 plt.show()
